@@ -19,8 +19,9 @@ export default async function Home({ searchParams }: HomeProps) {
     posted_at: Date;
     name: string;
     username: string;
+    avatar_url: string | null;
   }[]>`
-    SELECT posts.id, posts.content, posts.posted_at, users.name, users.username
+    SELECT posts.id, posts.content, posts.posted_at, users.name, users.username, users.avatar_url
     FROM posts
     JOIN users ON posts.user_id = users.id
     ORDER BY posts.posted_at DESC
@@ -33,6 +34,7 @@ export default async function Home({ searchParams }: HomeProps) {
           key={post.id}
           name={post.name}
           handle={post.username}
+          avatarSrc={post.avatar_url ?? undefined}
           timestamp={Math.floor(new Date(post.posted_at).getTime() / 1000)}
           body={post.content}
         />

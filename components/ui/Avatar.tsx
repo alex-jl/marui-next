@@ -59,7 +59,7 @@ export function Avatar({
         className={[
           cls,
           "rounded-full overflow-hidden bg-celadon-dark flex items-center justify-center",
-          "ring-2 ring-white transition-transform cursor-pointer hover:scale-110 active:scale-95",
+          "ring-1 ring-steel-light/50 transition-transform cursor-pointer hover:scale-110 active:scale-95",
           clickable ? "hover:ring-celadon-dark" : "",
         ].filter(Boolean).join(" ")}
       >

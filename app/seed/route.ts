@@ -10,15 +10,16 @@ async function seedUsers() {
       name VARCHAR(255) NOT NULL,
       username VARCHAR(255) NOT NULL UNIQUE,
       email TEXT NOT NULL UNIQUE,
-      joined_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
+      joined_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+      avatar_url TEXT
     );
   `;
 
   const insertedUsers = await Promise.all(
     users.map(async (user) => {
       return sql`
-        INSERT INTO users (id, name, username, email)
-        VALUES (${user.id}, ${user.name}, ${user.username}, ${user.email})
+        INSERT INTO users (id, name, username, email, avatar_url)
+        VALUES (${user.id}, ${user.name}, ${user.username}, ${user.email}, ${user.avatar_url})
         ON CONFLICT (id) DO NOTHING;
       `;
     }),
