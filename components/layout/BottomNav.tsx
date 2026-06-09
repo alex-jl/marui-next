@@ -5,23 +5,23 @@ import {
   HomeIcon,
   UserGroupIcon,
   PlusIcon,
-  BookmarkIcon,
   UserIcon,
+  Cog6ToothIcon,
 } from "@heroicons/react/24/outline";
 import {
   HomeIcon as HomeIconSolid,
   UserGroupIcon as UserGroupIconSolid,
-  BookmarkIcon as BookmarkIconSolid,
   UserIcon as UserIconSolid,
+  Cog6ToothIcon as Cog6ToothIconSolid,
 } from "@heroicons/react/24/solid";
 
-type Tab = "feed" | "circle" | "saved" | "profile";
+type Tab = "feed" | "circle" | "profile" | "settings";
 
 const tabs: { id: Tab; label: string; icon: (active: boolean) => React.ReactNode }[] = [
-  { id: "feed",    label: "Feed",    icon: (a) => a ? <HomeIconSolid className="w-6 h-6" /> : <HomeIcon className="w-6 h-6" /> },
-  { id: "circle",  label: "Circle",  icon: (a) => a ? <UserGroupIconSolid className="w-6 h-6" /> : <UserGroupIcon className="w-6 h-6" /> },
-  { id: "saved",   label: "Saved",   icon: (a) => a ? <BookmarkIconSolid className="w-6 h-6" /> : <BookmarkIcon className="w-6 h-6" /> },
-  { id: "profile", label: "Profile", icon: (a) => a ? <UserIconSolid className="w-6 h-6" /> : <UserIcon className="w-6 h-6" /> },
+  { id: "feed",     label: "Feed",     icon: (a) => a ? <HomeIconSolid className="w-6 h-6" /> : <HomeIcon className="w-6 h-6" /> },
+  { id: "circle",   label: "Circle",   icon: (a) => a ? <UserGroupIconSolid className="w-6 h-6" /> : <UserGroupIcon className="w-6 h-6" /> },
+  { id: "profile",  label: "Profile",  icon: (a) => a ? <UserIconSolid className="w-6 h-6" /> : <UserIcon className="w-6 h-6" /> },
+  { id: "settings", label: "Settings", icon: (a) => a ? <Cog6ToothIconSolid className="w-6 h-6" /> : <Cog6ToothIcon className="w-6 h-6" /> },
 ];
 
 interface BottomNavProps {

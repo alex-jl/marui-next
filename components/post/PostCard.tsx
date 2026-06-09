@@ -18,7 +18,6 @@ interface PostCardProps {
   tags?: Tag[];
   likes?: number;
   liked?: boolean;
-  bookmarked?: boolean;
 }
 
 export function PostCard({
@@ -32,7 +31,6 @@ export function PostCard({
   tags = [],
   likes,
   liked,
-  bookmarked,
 }: PostCardProps) {
   return (
     <article className="bg-card border border-steel-light/50 rounded flex flex-col gap-4 p-4">
@@ -70,7 +68,6 @@ export function PostCard({
       <ActionBar
         likes={likes}
         liked={liked}
-        bookmarked={bookmarked}
       />
     </article>
   );
