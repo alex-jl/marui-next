@@ -1,15 +1,12 @@
 import { Avatar } from "@/components/ui/Avatar";
+import { Timestamp } from "@/components/ui/Timestamp";
 
 interface UserHeaderProps {
   name: string;
   handle: string;
   avatarSrc?: string;
-  timestamp?: string;
+  timestamp?: number;
   size?: "sm" | "md";
-}
-
-function formatTimestamp(ts: string): string {
-  return ts;
 }
 
 export function UserHeader({
@@ -34,7 +31,7 @@ export function UserHeader({
           {timestamp && (
             <>
               <span className="mx-1">·</span>
-              {formatTimestamp(timestamp)}
+              <Timestamp unix={timestamp} />
             </>
           )}
         </p>

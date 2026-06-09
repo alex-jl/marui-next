@@ -11,7 +11,7 @@ interface PostCardProps {
   name: string;
   handle: string;
   avatarSrc?: string;
-  timestamp: string;
+  timestamp: number;
   body: string;
   imageSrc?: string;
   imageAlt?: string;

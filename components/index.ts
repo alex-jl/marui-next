@@ -6,6 +6,8 @@ export { Input, Textarea } from "./ui/Input";
 export { IconButton } from "./ui/IconButton";
 export { Divider } from "./ui/Divider";
 export { Skeleton, PostSkeleton } from "./ui/Skeleton";
+export { Timestamp } from "./ui/Timestamp";
+export { Tooltip } from "./ui/Tooltip";
 export { Pagination } from "./ui/Pagination";
 
 // Post components
