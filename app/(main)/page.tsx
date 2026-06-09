@@ -1,5 +1,3 @@
-import { NavBar } from "@/components/layout/NavBar";
-import { BottomNav } from "@/components/layout/BottomNav";
 import { Feed } from "@/components/layout/Feed";
 import { PostCard } from "@/components/post/PostCard";
 import { Pagination } from "@/components/ui/Pagination";
@@ -50,18 +48,11 @@ export default async function Home({ searchParams }: HomeProps) {
   const page = Math.max(1, parseInt(pageParam ?? "1", 10) || 1);
 
   return (
-    <div className="min-h-screen bg-surface">
-      <NavBar avatarInitials="AJ" />
-
-      <Feed>
-        {PLACEHOLDER_POSTS.map((post) => (
-          <PostCard key={post.id} {...post} />
-        ))}
-
-        <Pagination page={page} hasOlder={page < 3} />
-      </Feed>
-
-      <BottomNav />
-    </div>
+    <Feed>
+      {PLACEHOLDER_POSTS.map((post) => (
+        <PostCard key={post.id} {...post} />
+      ))}
+      <Pagination page={page} hasOlder={page < 3} />
+    </Feed>
   );
 }
