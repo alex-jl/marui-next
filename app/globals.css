@@ -1,26 +1,35 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
+/* Tailwind design tokens — inlined into utility classes */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-granite: #466060;
+  --color-granite-light: #6b8f8f;
+  --color-granite-dark: #2d4040;
+  --color-dusty: #5c5d8d;
+  --color-dusty-light: #7e7faa;
+  --color-steel: #99a1a6;
+  --color-steel-light: #c4cace;
+  --color-steel-dark: #6b7478;
+  --color-celadon: #81A684;
+  --color-celadon-dark: #5e7d61;
+  --color-tea: #cce2a3;
+  --color-tea-dark: #aace73;
+  --color-surface: #f0f5f5;
+  --color-card: #ffffff;
+  --color-ink: #1c2c2c;
+  --color-ink-muted: #586e6e;
+  --font-sans: var(--font-sawarabi);
+  --font-display: var(--font-sawarabi);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Real CSS custom properties so raw var() refs resolve in CSS rules */
+:root {
+  --background: #f0f5f5;
+  --foreground: #1c2c2c;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #f0f5f5;
+  color: #1c2c2c;
+  -webkit-font-smoothing: antialiased;
 }
