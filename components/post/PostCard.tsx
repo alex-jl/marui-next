@@ -1,11 +1,6 @@
 import { UserHeader } from "./UserHeader";
 import { ActionBar } from "./ActionBar";
-import { Badge } from "@/components/ui/Badge";
 import Image from "next/image";
-
-interface Tag {
-  label: string;
-}
 
 interface PostCardProps {
   name: string;
@@ -15,7 +10,6 @@ interface PostCardProps {
   body: string;
   imageSrc?: string;
   imageAlt?: string;
-  tags?: Tag[];
   likes?: number;
   liked?: boolean;
 }
@@ -28,7 +22,6 @@ export function PostCard({
   body,
   imageSrc,
   imageAlt = "",
-  tags = [],
   likes,
   liked,
 }: PostCardProps) {
@@ -52,16 +45,6 @@ export function PostCard({
             className="object-cover"
             sizes="(max-width: 640px) 100vw, 600px"
           />
-        </div>
-      )}
-
-      {tags.length > 0 && (
-        <div className="flex flex-wrap gap-1.5">
-          {tags.map((t) => (
-            <Badge key={t.label} variant="tag">
-              #{t.label}
-            </Badge>
-          ))}
         </div>
       )}
 
