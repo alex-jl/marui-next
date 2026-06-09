@@ -25,7 +25,7 @@ export function NavBar({ appName = "marui" }: NavBarProps) {
             <div className="w-8 h-8 rounded-full bg-steel-light/30 animate-pulse" />
           </ClerkLoading>
           <ClerkLoaded>
-            <UserButton />
+            <UserButton appearance={{ variables: { colorBackground: "#ffffff" } }} />
           </ClerkLoaded>
         </div>
       </div>

@@ -27,7 +27,21 @@ export default function RootLayout({
       className={`${sawarabi.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
-        <ClerkProvider>
+        <ClerkProvider
+          appearance={{
+            theme: 'simple',
+            variables: {
+              colorPrimary: "#466060",
+              colorBackground: "#f0f5f5",
+              colorForeground: "#1c2c2c",
+              colorMutedForeground: "#586e6e",
+              colorInput: "#ffffff",
+              colorInputForeground: "#1c2c2c",
+              borderRadius: "0.25rem",
+              fontFamily: "var(--font-sawarabi), sans-serif",
+            },
+          }}
+        >
           {children}
         </ClerkProvider>
       </body>
