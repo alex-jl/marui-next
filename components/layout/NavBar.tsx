@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { UserButton } from "@clerk/nextjs";
+import { UserButton, ClerkLoading, ClerkLoaded } from "@clerk/nextjs";
 import { Input } from "@/components/ui/Input";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
@@ -20,7 +20,14 @@ export function NavBar({ appName = "marui" }: NavBarProps) {
           <Input aria-label="Search" placeholder="Search…" icon={<MagnifyingGlassIcon className="w-4 h-4" />} />
         </div>
 
-        <UserButton />
+        <div className="shrink-0 w-8 h-8 flex items-center justify-center">
+          <ClerkLoading>
+            <div className="w-8 h-8 rounded-full bg-steel-light/30 animate-pulse" />
+          </ClerkLoading>
+          <ClerkLoaded>
+            <UserButton />
+          </ClerkLoaded>
+        </div>
       </div>
     </header>
   );
