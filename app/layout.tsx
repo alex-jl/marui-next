@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Sawarabi_Gothic } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next"
 import "./globals.css";
 
 const sawarabi = Sawarabi_Gothic({
@@ -24,6 +25,7 @@ export default function RootLayout({
       className={`${sawarabi.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">{children}</body>
+      <Analytics />
     </html>
   );
 }
