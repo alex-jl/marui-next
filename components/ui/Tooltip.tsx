@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef } from "react";
 
 interface TooltipProps {
   content: string;
@@ -12,16 +12,16 @@ export function Tooltip({ content, children, className = "" }: TooltipProps) {
   const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
   const ref = useRef<HTMLSpanElement>(null);
 
-  const show = useCallback(() => {
+  function show() {
     if (ref.current) {
       const rect = ref.current.getBoundingClientRect();
       setPos({ x: rect.left + rect.width / 2, y: rect.top });
     }
-  }, []);
+  }
 
-  const hide = useCallback(() => setPos(null), []);
-
-  const toggle = useCallback(() => (pos ? hide() : show()), [pos, show, hide]);
+  function hide() {
+    setPos(null);
+  }
 
   return (
     <>
@@ -30,7 +30,6 @@ export function Tooltip({ content, children, className = "" }: TooltipProps) {
         className={`inline-block ${className}`}
         onMouseEnter={show}
         onMouseLeave={hide}
-        onClick={toggle}
       >
         {children}
       </span>

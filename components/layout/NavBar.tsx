@@ -23,7 +23,7 @@ export function NavBar({
         </Link>
 
         <div className="flex-1">
-          <Input placeholder="Search…" icon={<MagnifyingGlassIcon className="w-4 h-4" />} />
+          <Input aria-label="Search" placeholder="Search…" icon={<MagnifyingGlassIcon className="w-4 h-4" />} />
         </div>
 
         <Avatar

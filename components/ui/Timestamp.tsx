@@ -16,7 +16,7 @@ export function Timestamp({ unix, className = "" }: TimestampProps) {
     <Tooltip content={date.format("ddd, D MMM YYYY, HH:mm")}>
       <time
         dateTime={date.toISOString()}
-        className={`hover:underline underline-offset-2 cursor-pointer ${className}`}
+        className={`hover:underline underline-offset-2 cursor-default ${className}`}
       >
         {date.fromNow()}
       </time>
