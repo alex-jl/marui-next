@@ -21,7 +21,7 @@ export function Pagination({ page, hasOlder = true }: PaginationProps) {
       </div>
 
       <div className="flex justify-center">
-        <span className="text-xs text-steel">Page {page}</span>
+        <span className="text-xs text-ink-muted">Page {page}</span>
       </div>
 
       <div className="flex justify-end">

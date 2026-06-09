@@ -7,7 +7,7 @@ interface BadgeProps {
 }
 
 const variantClasses: Record<Variant, string> = {
-  tag: "bg-celadon/20 text-celadon-dark text-xs px-2.5 py-0.5 rounded",
+  tag: "bg-celadon/20 text-granite-dark text-xs px-2.5 py-0.5 rounded",
   count:
     "bg-granite text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center",
   status: "bg-celadon text-granite-dark text-xs px-2 py-0.5 rounded",

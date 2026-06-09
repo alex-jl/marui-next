@@ -26,7 +26,7 @@ export function UserHeader({
       />
       <div className="flex-1 min-w-0">
         <p className="text-sm font-semibold text-ink font-display truncate">{name}</p>
-        <p className="text-xs text-steel truncate">
+        <p className="text-xs text-steel-dark truncate">
           @{handle}
           {timestamp && (
             <>

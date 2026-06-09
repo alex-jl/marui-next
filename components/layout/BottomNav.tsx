@@ -49,7 +49,7 @@ export function BottomNav({ defaultTab = "feed", onTabChange }: BottomNavProps) 
               aria-label={tab.label}
               className={[
                 "flex-1 flex flex-col items-center justify-center gap-0.5 cursor-pointer transition-colors",
-                isActive ? "text-granite" : "text-steel hover:text-ink-muted",
+                isActive ? "text-granite" : "text-steel-dark hover:text-ink-muted",
               ].join(" ")}
             >
               {tab.icon(isActive)}
@@ -74,7 +74,7 @@ export function BottomNav({ defaultTab = "feed", onTabChange }: BottomNavProps) 
               aria-label={tab.label}
               className={[
                 "flex-1 flex flex-col items-center justify-center gap-0.5 cursor-pointer transition-colors",
-                isActive ? "text-granite" : "text-steel hover:text-ink-muted",
+                isActive ? "text-granite" : "text-steel-dark hover:text-ink-muted",
               ].join(" ")}
             >
               {tab.icon(isActive)}

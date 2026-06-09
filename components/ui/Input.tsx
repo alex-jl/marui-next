@@ -8,7 +8,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 const baseClasses =
-  "w-full bg-card border border-steel-light rounded px-3 py-2 text-sm text-ink placeholder:text-steel outline-none transition-colors focus:border-granite focus:ring-2 focus:ring-granite/20 disabled:opacity-50";
+  "w-full bg-card border border-steel-light rounded px-3 py-2 text-sm text-ink placeholder:text-steel-dark outline-none transition-colors focus:border-granite focus:ring-2 focus:ring-granite/20 disabled:opacity-50";
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, hint, error, icon, className = "", ...props }, ref) => {
@@ -21,7 +21,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         )}
         <div className="relative">
           {icon && (
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-steel">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-steel-dark">
               {icon}
             </span>
           )}
