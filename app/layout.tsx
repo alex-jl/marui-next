@@ -1,4 +1,4 @@
-import {ClerkProvider} from "@clerk/nextjs";
+import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Sawarabi_Gothic } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next"
@@ -27,7 +27,7 @@ export default function RootLayout({
       className={`${sawarabi.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
-        <ClerkProvider>
+        <ClerkProvider publishableKey="pk_test_Z2l2aW5nLWJlZS01NS5jbGVyay5hY2NvdW50cy5kZXYk">
           {children}
         </ClerkProvider>
       </body>
