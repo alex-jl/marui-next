@@ -51,7 +51,7 @@ export function BottomNav() {
 
         <button
           aria-label="New Post"
-          className="flex-none w-12 h-12 mx-4 flex items-center justify-center bg-granite text-white rounded-full cursor-pointer hover:bg-granite-dark transition-colors"
+          className="flex-none w-12 h-12 mx-4 flex items-center justify-center bg-granite text-white rounded-full cursor-pointer hover:bg-granite-dark transition hover:scale-110 active:scale-95"
         >
           <PlusIcon className="w-6 h-6" />
         </button>
