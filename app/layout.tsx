@@ -27,7 +27,7 @@ export default function RootLayout({
       className={`${sawarabi.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
-        <ClerkProvider publishableKey="pk_test_Z2l2aW5nLWJlZS01NS5jbGVyay5hY2NvdW50cy5kZXYk">
+        <ClerkProvider>
           {children}
         </ClerkProvider>
       </body>
