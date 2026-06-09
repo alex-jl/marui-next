@@ -4,7 +4,6 @@ import Image from "next/image";
 
 interface PostCardProps {
   name: string;
-  handle: string;
   avatarSrc?: string;
   timestamp: number;
   body: string;
@@ -16,7 +15,6 @@ interface PostCardProps {
 
 export function PostCard({
   name,
-  handle,
   avatarSrc,
   timestamp,
   body,
@@ -29,7 +27,6 @@ export function PostCard({
     <article className="bg-card border border-steel-light/50 rounded flex flex-col gap-4 p-4">
       <UserHeader
         name={name}
-        handle={handle}
         avatarSrc={avatarSrc}
         timestamp={timestamp}
       />

@@ -8,7 +8,6 @@ async function seedUsers() {
     CREATE TABLE IF NOT EXISTS users (
       id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
       name VARCHAR(255) NOT NULL,
-      username VARCHAR(255) NOT NULL UNIQUE,
       email TEXT NOT NULL UNIQUE,
       joined_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
       avatar_url TEXT
@@ -18,8 +17,8 @@ async function seedUsers() {
   const insertedUsers = await Promise.all(
     users.map(async (user) => {
       return sql`
-        INSERT INTO users (id, name, username, email, avatar_url)
-        VALUES (${user.id}, ${user.name}, ${user.username}, ${user.email}, ${user.avatar_url})
+        INSERT INTO users (id, name, email, avatar_url)
+        VALUES (${user.id}, ${user.name}, ${user.email}, ${user.avatar_url})
         ON CONFLICT (id) DO NOTHING;
       `;
     }),

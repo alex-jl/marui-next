@@ -4,21 +4,18 @@ const users = [
   {
     id: '019eadfe-f764-751f-89fe-67695ec38f77',
     name: 'Alice A',
-    username: 'alice_a',
     email: 'alice@nextmail.com',
     avatar_url: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=80&q=80'
   },
   {
     id: '019eadff-2197-7e57-933b-f79d441fe42d',
     name: 'Bob B',
-    username: 'bob_b',
     email: 'bob@nextmail.com',
     avatar_url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&q=80'
   },
   {
     id: '019eadff-456d-7be7-a6ba-1ad82aefeeef',
     name: 'Charlie C',
-    username: 'charlie_c',
     email: 'charlie@nextmail.com',
     avatar_url: null,
   },

@@ -3,7 +3,6 @@ import { Timestamp } from "@/components/ui/Timestamp";
 
 interface UserHeaderProps {
   name: string;
-  handle: string;
   avatarSrc?: string;
   timestamp?: number;
   size?: "sm" | "md";
@@ -11,7 +10,6 @@ interface UserHeaderProps {
 
 export function UserHeader({
   name,
-  handle,
   avatarSrc,
   timestamp,
   size = "md",
@@ -26,15 +24,11 @@ export function UserHeader({
       />
       <div className="flex-1 min-w-0">
         <p className="text-sm font-semibold text-ink font-display truncate">{name}</p>
-        <p className="text-xs text-steel-dark truncate">
-          @{handle}
-          {timestamp && (
-            <>
-              <span className="mx-1">·</span>
-              <Timestamp unix={timestamp} />
-            </>
-          )}
-        </p>
+        {timestamp && (
+          <p className="text-xs text-steel-dark truncate">
+            <Timestamp unix={timestamp} />
+          </p>
+        )}
       </div>
     </div>
   );
