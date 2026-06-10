@@ -22,3 +22,11 @@ export async function unlikePost(postId: string) {
   const userId = await getUserId();
   await sql`DELETE FROM likes WHERE user_id = ${userId} AND post_id = ${postId}`;
 }
+
+export async function acceptConnection(connectionId: string) {
+  const userId = await getUserId();
+  await sql`
+    UPDATE connections SET accepted_at = NOW()
+    WHERE id = ${connectionId} AND recipient_id = ${userId} AND accepted_at IS NULL
+  `;
+}

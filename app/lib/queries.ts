@@ -81,6 +81,56 @@ export async function getLikedPosts(userId: string): Promise<PostRow[]> {
   `;
 }
 
+export type ConnectionRow = {
+  id: string;
+  name: string;
+  avatar_url: string | null;
+};
+
+export type PendingRequestRow = {
+  connection_id: string;
+  id: string;
+  name: string;
+  avatar_url: string | null;
+  created_at: Date;
+};
+
+export async function getConnections(userId: string): Promise<ConnectionRow[]> {
+  return sql<ConnectionRow[]>`
+    SELECT users.id, users.name, users.avatar_url
+    FROM connections
+    JOIN users ON users.id = CASE
+      WHEN connections.requester_id = ${userId} THEN connections.recipient_id
+      ELSE connections.requester_id
+    END
+    WHERE (connections.requester_id = ${userId} OR connections.recipient_id = ${userId})
+    AND connections.accepted_at IS NOT NULL
+    ORDER BY connections.accepted_at DESC
+  `;
+}
+
+export async function getPendingRequests(userId: string): Promise<PendingRequestRow[]> {
+  return sql<PendingRequestRow[]>`
+    SELECT connections.id AS connection_id, users.id, users.name, users.avatar_url, connections.created_at
+    FROM connections
+    JOIN users ON users.id = connections.requester_id
+    WHERE connections.recipient_id = ${userId}
+    AND connections.accepted_at IS NULL
+    ORDER BY connections.created_at DESC
+  `;
+}
+
+export async function getSentRequests(userId: string): Promise<PendingRequestRow[]> {
+  return sql<PendingRequestRow[]>`
+    SELECT connections.id AS connection_id, users.id, users.name, users.avatar_url, connections.created_at
+    FROM connections
+    JOIN users ON users.id = connections.recipient_id
+    WHERE connections.requester_id = ${userId}
+    AND connections.accepted_at IS NULL
+    ORDER BY connections.created_at DESC
+  `;
+}
+
 export async function getUserPosts(userId: string, currentUserId: string): Promise<PostRow[]> {
   return sql<PostRow[]>`
     SELECT posts.id, posts.user_id, posts.content, posts.posted_at, users.name, users.avatar_url,
