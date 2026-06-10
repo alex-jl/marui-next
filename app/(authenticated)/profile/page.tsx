@@ -2,14 +2,27 @@ import { notFound } from "next/navigation";
 import { Feed } from "@/components/layout/Feed";
 import { Avatar } from "@/components/ui/Avatar";
 import { Timestamp } from "@/components/ui/Timestamp";
+import { Tabs } from "@/components/ui/Tabs";
 import { PostCard } from "@/components/post/PostCard";
-import { getCurrentUser, getUserPosts } from "@/app/lib/queries";
+import { getCurrentUser, getUserPosts, getLikedPosts, getUserPostCount } from "@/app/lib/queries";
 
-export default async function ProfilePage() {
+interface ProfilePageProps {
+  searchParams: Promise<{ tab?: string }>;
+}
+
+export default async function ProfilePage({ searchParams }: ProfilePageProps) {
+  const { tab } = await searchParams;
+  const activeTab = tab === "liked" ? "liked" : "posts";
+
   const currentUser = await getCurrentUser();
   if (!currentUser) notFound();
 
-  const posts = await getUserPosts(currentUser.id, currentUser.id);
+  const [posts, postCount] = await Promise.all([
+    activeTab === "liked"
+      ? getLikedPosts(currentUser.id)
+      : getUserPosts(currentUser.id, currentUser.id),
+    getUserPostCount(currentUser.id),
+  ]);
 
   return (
     <Feed>
@@ -23,7 +36,7 @@ export default async function ProfilePage() {
         <div className="flex flex-col gap-0.5 min-w-0">
           <p className="text-lg font-semibold text-ink font-display truncate">{currentUser.name}</p>
           <p className="text-sm text-steel-dark">
-            {posts.length} {posts.length === 1 ? "post" : "posts"}
+            {postCount} {postCount === 1 ? "post" : "posts"}
           </p>
           <p className="text-sm text-steel-dark">
             Joined the circle{" "}
@@ -32,13 +45,20 @@ export default async function ProfilePage() {
         </div>
       </div>
 
+      <Tabs
+        tabs={[
+          { label: "Your Posts", href: "/profile", active: activeTab === "posts" },
+          { label: "Liked Posts", href: "/profile?tab=liked", active: activeTab === "liked" },
+        ]}
+      />
+
       {posts.map((post) => (
         <PostCard
           key={post.id}
           id={post.id}
-          userId={currentUser.id}
-          name={currentUser.name}
-          avatarSrc={currentUser.avatar_url ?? undefined}
+          userId={post.user_id}
+          name={post.name}
+          avatarSrc={post.avatar_url ?? undefined}
           timestamp={Math.floor(new Date(post.posted_at).getTime() / 1000)}
           body={post.content}
           likes={post.like_count}
@@ -47,7 +67,9 @@ export default async function ProfilePage() {
       ))}
 
       {posts.length === 0 && (
-        <p className="text-center text-sm text-steel-dark py-8">No posts yet.</p>
+        <p className="text-center text-sm text-steel-dark py-8">
+          {activeTab === "liked" ? "No liked posts yet." : "No posts yet."}
+        </p>
       )}
     </Feed>
   );
