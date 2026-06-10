@@ -7,7 +7,7 @@ import { Tabs } from "@/components/ui/Tabs";
 import { Tooltip } from "@/components/ui/Tooltip";
 import { Timestamp } from "@/components/ui/Timestamp";
 import { getCurrentUser, getConnections, getPendingRequests, getSentRequests } from "@/app/lib/queries";
-import { acceptConnection } from "@/app/lib/actions";
+import { acceptConnection, declineRequest, cancelRequest } from "@/app/lib/actions";
 
 export const metadata: Metadata = { title: "Circle" };
 
@@ -87,11 +87,18 @@ export default async function CirclePage({ searchParams }: CirclePageProps) {
                   Requested <Timestamp unix={Math.floor(new Date(req.created_at).getTime() / 1000)} />
                 </p>
               </div>
-              <form action={acceptConnection.bind(null, req.connection_id)}>
-                <button className="text-sm font-medium px-3 py-1.5 rounded bg-granite text-white hover:bg-granite-dark transition-colors cursor-pointer">
-                  Accept
-                </button>
-              </form>
+              <div className="flex items-center gap-1">
+                <form action={declineRequest.bind(null, req.connection_id)}>
+                  <button className="text-sm font-medium px-3 py-1.5 rounded text-steel-dark hover:bg-red-500/10 hover:text-red-500 transition-colors cursor-pointer">
+                    Decline
+                  </button>
+                </form>
+                <form action={acceptConnection.bind(null, req.connection_id)}>
+                  <button className="text-sm font-medium px-3 py-1.5 rounded text-granite hover:bg-granite/10 transition-colors cursor-pointer">
+                    Accept
+                  </button>
+                </form>
+              </div>
             </div>
           ))}
           {pendingRequests.length === 0 && sentRequests.length === 0 && (
@@ -116,7 +123,11 @@ export default async function CirclePage({ searchParams }: CirclePageProps) {
                       Sent <Timestamp unix={Math.floor(new Date(req.created_at).getTime() / 1000)} />
                     </p>
                   </div>
-                  <span className="text-xs text-steel-dark">Pending</span>
+                  <form action={cancelRequest.bind(null, req.connection_id)}>
+                    <button className="text-sm font-medium px-3 py-1.5 rounded text-steel-dark hover:bg-red-500/10 hover:text-red-500 transition-colors cursor-pointer">
+                      Cancel
+                    </button>
+                  </form>
                 </div>
               ))}
             </>
