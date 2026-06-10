@@ -3,6 +3,7 @@ import { ActionBar } from "./ActionBar";
 import Image from "next/image";
 
 interface PostCardProps {
+  id?: string;
   name: string;
   avatarSrc?: string;
   timestamp: number;
@@ -14,6 +15,7 @@ interface PostCardProps {
 }
 
 export function PostCard({
+  id,
   name,
   avatarSrc,
   timestamp,
@@ -46,6 +48,7 @@ export function PostCard({
       )}
 
       <ActionBar
+        postId={id}
         likes={likes}
         liked={liked}
       />

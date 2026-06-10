@@ -31,6 +31,7 @@ export default async function Home({ searchParams }: HomeProps) {
       {posts.map((post) => (
         <PostCard
           key={post.id}
+          id={post.id}
           name={post.name}
           avatarSrc={post.avatar_url ?? undefined}
           timestamp={Math.floor(new Date(post.posted_at).getTime() / 1000)}

@@ -30,7 +30,7 @@ export function IconButton({
     <button
       aria-label={label}
       className={[
-        "inline-flex items-center gap-1.5 text-sm transition-colors cursor-pointer select-none disabled:opacity-50",
+        "inline-flex items-center gap-1.5 text-sm transition cursor-pointer select-none disabled:opacity-50 hover:scale-110 active:scale-95",
         active ? activeColorMap[activeColor] : "text-steel-dark hover:text-ink-muted",
         className,
       ]
