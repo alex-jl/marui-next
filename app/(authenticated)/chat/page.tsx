@@ -1,3 +1,7 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Chat" };
+
 export default function ChatPage() {
   return (
     <main className="flex flex-col items-center justify-center min-h-[60vh] gap-2 text-center px-4">

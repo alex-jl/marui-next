@@ -1,4 +1,7 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+
+export const metadata: Metadata = { title: "Profile" };
 import { Feed } from "@/components/layout/Feed";
 import { Avatar } from "@/components/ui/Avatar";
 import { Timestamp } from "@/components/ui/Timestamp";

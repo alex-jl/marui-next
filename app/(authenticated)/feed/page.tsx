@@ -1,4 +1,7 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+
+export const metadata: Metadata = { title: "Feed" };
 import { Feed } from "@/components/layout/Feed";
 import { PostCard } from "@/components/post/PostCard";
 import { Pagination } from "@/components/ui/Pagination";

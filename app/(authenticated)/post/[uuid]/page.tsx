@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Feed } from "@/components/layout/Feed";
 import { PostCard } from "@/components/post/PostCard";
@@ -6,6 +7,15 @@ import { getCurrentUser, getPost } from "@/app/lib/queries";
 
 interface PostPageProps {
   params: Promise<{ uuid: string }>;
+}
+
+export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
+  const { uuid } = await params;
+  const currentUser = await getCurrentUser();
+  if (!currentUser) return {};
+  const post = await getPost(uuid, currentUser.id);
+  if (!post) return {};
+  return { title: `Post by ${post.name}` };
 }
 
 export default async function PostPage({ params }: PostPageProps) {
