@@ -7,20 +7,20 @@ import {
   UserGroupIcon,
   PlusIcon,
   UserIcon,
-  Cog6ToothIcon,
+  ChatBubbleLeftRightIcon,
 } from "@heroicons/react/24/outline";
 import {
   HomeIcon as HomeIconSolid,
   UserGroupIcon as UserGroupIconSolid,
   UserIcon as UserIconSolid,
-  Cog6ToothIcon as Cog6ToothIconSolid,
+  ChatBubbleLeftRightIcon as ChatBubbleLeftRightIconSolid,
 } from "@heroicons/react/24/solid";
 
 const tabs = [
   { href: "/feed",     label: "Feed",     icon: (a: boolean) => a ? <HomeIconSolid className="w-6 h-6" /> : <HomeIcon className="w-6 h-6" /> },
   { href: "/circle",   label: "Circle",   icon: (a: boolean) => a ? <UserGroupIconSolid className="w-6 h-6" /> : <UserGroupIcon className="w-6 h-6" />, also: (p: string) => p.startsWith("/user/") },
   { href: "/profile",  label: "Profile",  icon: (a: boolean) => a ? <UserIconSolid className="w-6 h-6" /> : <UserIcon className="w-6 h-6" /> },
-  { href: "/settings", label: "Settings", icon: (a: boolean) => a ? <Cog6ToothIconSolid className="w-6 h-6" /> : <Cog6ToothIcon className="w-6 h-6" /> },
+  { href: "/chat",     label: "Chat",     icon: (a: boolean) => a ? <ChatBubbleLeftRightIconSolid className="w-6 h-6" /> : <ChatBubbleLeftRightIcon className="w-6 h-6" /> },
 ];
 
 export function BottomNav() {
