@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Feed } from "@/components/layout/Feed";
 import { Avatar } from "@/components/ui/Avatar";
 import { Tabs } from "@/components/ui/Tabs";
+import { Tooltip } from "@/components/ui/Tooltip";
 import { Timestamp } from "@/components/ui/Timestamp";
 import { getCurrentUser, getConnections, getPendingRequests, getSentRequests } from "@/app/lib/queries";
 import { acceptConnection } from "@/app/lib/actions";
@@ -37,17 +38,33 @@ export default async function CirclePage({ searchParams }: CirclePageProps) {
       />
 
       {activeTab === "connections" && (
-        <>
-          {connections.map((user) => (
-            <Link key={user.id} href={`/user/${user.id}`} className="bg-card border border-steel-light/50 rounded p-4 flex items-center gap-3 hover:border-steel transition-colors">
-              <Avatar src={user.avatar_url ?? undefined} alt={user.name} initials={user.name.slice(0, 2)} size="md" />
-              <p className="text-sm font-semibold text-ink">{user.name}</p>
-            </Link>
-          ))}
-          {connections.length === 0 && (
-            <p className="text-center text-sm text-steel-dark py-8">No connections yet.</p>
-          )}
-        </>
+        <div className="bg-card border border-steel-light/50 rounded p-5 flex flex-col gap-4">
+          <div className="flex items-baseline justify-between">
+            <p className="text-sm font-semibold text-ink">{connections.length} / 100</p>
+            <p className="text-xs text-steel-dark">spots remaining: {100 - connections.length}</p>
+          </div>
+
+          <div className="grid grid-cols-10 gap-2 justify-items-center">
+            {connections.map((user) => (
+              <Tooltip key={user.id} content={user.name}>
+                <Link href={`/user/${user.id}`} className="aspect-square">
+                  <Avatar
+                    src={user.avatar_url ?? undefined}
+                    alt={user.name}
+                    initials={user.name.slice(0, 2)}
+                    size="sm"
+                  />
+                </Link>
+              </Tooltip>
+            ))}
+            {Array.from({ length: 100 - connections.length }).map((_, i) => (
+              <div
+                key={i}
+                className="aspect-square w-8 h-8 rounded-full border border-dashed border-steel-light/70"
+              />
+            ))}
+          </div>
+        </div>
       )}
 
       {activeTab === "requests" && (
