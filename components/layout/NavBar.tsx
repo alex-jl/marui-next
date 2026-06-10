@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
 import { UserButton, ClerkLoading, ClerkLoaded } from "@clerk/nextjs";
 import { SearchForm } from "@/components/layout/SearchForm";
 
@@ -15,7 +16,9 @@ export function NavBar({ appName = "marui" }: NavBarProps) {
           <Image src="/icon.svg" alt={appName} width={36} height={36} />
         </Link>
 
-        <SearchForm />
+        <Suspense fallback={<div className="flex-1" />}>
+          <SearchForm />
+        </Suspense>
 
         <div className="shrink-0 w-8 h-8 flex items-center justify-center">
           <ClerkLoading>
