@@ -15,12 +15,13 @@ export default async function Home({ searchParams }: HomeProps) {
 
   const posts = await sql<{
     id: string;
+    user_id: string;
     content: string;
     posted_at: Date;
     name: string;
     avatar_url: string | null;
   }[]>`
-    SELECT posts.id, posts.content, posts.posted_at, users.name, users.avatar_url
+    SELECT posts.id, posts.user_id, posts.content, posts.posted_at, users.name, users.avatar_url
     FROM posts
     JOIN users ON posts.user_id = users.id
     ORDER BY posts.posted_at DESC
@@ -32,6 +33,7 @@ export default async function Home({ searchParams }: HomeProps) {
         <PostCard
           key={post.id}
           id={post.id}
+          userId={post.user_id}
           name={post.name}
           avatarSrc={post.avatar_url ?? undefined}
           timestamp={Math.floor(new Date(post.posted_at).getTime() / 1000)}

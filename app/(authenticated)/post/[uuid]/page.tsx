@@ -15,12 +15,13 @@ export default async function PostPage({ params }: PostPageProps) {
 
   const [post] = await sql<{
     id: string;
+    user_id: string;
     content: string;
     posted_at: Date;
     name: string;
     avatar_url: string | null;
   }[]>`
-    SELECT posts.id, posts.content, posts.posted_at, users.name, users.avatar_url
+    SELECT posts.id, posts.user_id, posts.content, posts.posted_at, users.name, users.avatar_url
     FROM posts
     JOIN users ON posts.user_id = users.id
     WHERE posts.id = ${uuid}
@@ -33,6 +34,7 @@ export default async function PostPage({ params }: PostPageProps) {
     <Feed>
       <PostCard
         id={post.id}
+        userId={post.user_id}
         name={post.name}
         avatarSrc={post.avatar_url ?? undefined}
         timestamp={Math.floor(new Date(post.posted_at).getTime() / 1000)}
