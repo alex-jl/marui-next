@@ -1,9 +1,8 @@
-import postgres from "postgres";
+import { notFound } from "next/navigation";
 import { Feed } from "@/components/layout/Feed";
 import { PostCard } from "@/components/post/PostCard";
 import { Pagination } from "@/components/ui/Pagination";
-
-const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
+import { getCurrentUser, getFeedPosts } from "@/app/lib/queries";
 
 interface HomeProps {
   searchParams: Promise<{ page?: string }>;
@@ -13,19 +12,10 @@ export default async function Home({ searchParams }: HomeProps) {
   const { page: pageParam } = await searchParams;
   const page = Math.max(1, parseInt(pageParam ?? "1", 10) || 1);
 
-  const posts = await sql<{
-    id: string;
-    user_id: string;
-    content: string;
-    posted_at: Date;
-    name: string;
-    avatar_url: string | null;
-  }[]>`
-    SELECT posts.id, posts.user_id, posts.content, posts.posted_at, users.name, users.avatar_url
-    FROM posts
-    JOIN users ON posts.user_id = users.id
-    ORDER BY posts.posted_at DESC
-  `;
+  const currentUser = await getCurrentUser();
+  if (!currentUser) notFound();
+
+  const posts = await getFeedPosts(currentUser.id);
 
   return (
     <Feed>
@@ -38,6 +28,8 @@ export default async function Home({ searchParams }: HomeProps) {
           avatarSrc={post.avatar_url ?? undefined}
           timestamp={Math.floor(new Date(post.posted_at).getTime() / 1000)}
           body={post.content}
+          likes={post.like_count}
+          liked={post.liked}
         />
       ))}
       <Pagination page={page} hasOlder={false} />

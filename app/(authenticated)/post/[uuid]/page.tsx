@@ -1,10 +1,8 @@
 import { notFound } from "next/navigation";
-import postgres from "postgres";
 import { Feed } from "@/components/layout/Feed";
 import { PostCard } from "@/components/post/PostCard";
 import { BackButton } from "@/components/ui/BackButton";
-
-const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
+import { getCurrentUser, getPost } from "@/app/lib/queries";
 
 interface PostPageProps {
   params: Promise<{ uuid: string }>;
@@ -13,21 +11,10 @@ interface PostPageProps {
 export default async function PostPage({ params }: PostPageProps) {
   const { uuid } = await params;
 
-  const [post] = await sql<{
-    id: string;
-    user_id: string;
-    content: string;
-    posted_at: Date;
-    name: string;
-    avatar_url: string | null;
-  }[]>`
-    SELECT posts.id, posts.user_id, posts.content, posts.posted_at, users.name, users.avatar_url
-    FROM posts
-    JOIN users ON posts.user_id = users.id
-    WHERE posts.id = ${uuid}
-    LIMIT 1
-  `;
+  const currentUser = await getCurrentUser();
+  if (!currentUser) notFound();
 
+  const post = await getPost(uuid, currentUser.id);
   if (!post) notFound();
 
   return (
@@ -39,6 +26,8 @@ export default async function PostPage({ params }: PostPageProps) {
         avatarSrc={post.avatar_url ?? undefined}
         timestamp={Math.floor(new Date(post.posted_at).getTime() / 1000)}
         body={post.content}
+        likes={post.like_count}
+        liked={post.liked}
       />
       <BackButton />
     </Feed>

@@ -4,6 +4,7 @@ import { Feed } from "@/components/layout/Feed";
 import { Avatar } from "@/components/ui/Avatar";
 import { Timestamp } from "@/components/ui/Timestamp";
 import { PostCard } from "@/components/post/PostCard";
+import { getCurrentUser, getUserPosts } from "@/app/lib/queries";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
 
@@ -14,30 +15,16 @@ interface UserPageProps {
 export default async function UserPage({ params }: UserPageProps) {
   const { uuid } = await params;
 
-  const [user] = await sql<{
-    id: string;
-    name: string;
-    avatar_url: string | null;
-    joined_at: Date;
-  }[]>`
-    SELECT id, name, avatar_url, joined_at
-    FROM users
-    WHERE id = ${uuid}
-    LIMIT 1
-  `;
+  const [currentUser, user] = await Promise.all([
+    getCurrentUser(),
+    sql<{ id: string; name: string; avatar_url: string | null; joined_at: Date }[]>`
+      SELECT id, name, avatar_url, joined_at FROM users WHERE id = ${uuid} LIMIT 1
+    `.then((r) => r[0] ?? null),
+  ]);
 
-  if (!user) notFound();
+  if (!currentUser || !user) notFound();
 
-  const posts = await sql<{
-    id: string;
-    content: string;
-    posted_at: Date;
-  }[]>`
-    SELECT id, content, posted_at
-    FROM posts
-    WHERE user_id = ${uuid}
-    ORDER BY posted_at DESC
-  `;
+  const posts = await getUserPosts(uuid, currentUser.id);
 
   return (
     <Feed>
@@ -69,6 +56,8 @@ export default async function UserPage({ params }: UserPageProps) {
           avatarSrc={user.avatar_url ?? undefined}
           timestamp={Math.floor(new Date(post.posted_at).getTime() / 1000)}
           body={post.content}
+          likes={post.like_count}
+          liked={post.liked}
         />
       ))}
 
