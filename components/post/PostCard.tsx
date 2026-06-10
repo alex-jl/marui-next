@@ -9,10 +9,20 @@ interface PostCardProps {
   avatarSrc?: string;
   timestamp: number;
   body: string;
+  highlight?: string;
   imageSrc?: string;
   imageAlt?: string;
   likes?: number;
   liked?: boolean;
+}
+
+function highlightText(text: string, term: string) {
+  const parts = text.split(new RegExp(`(${term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi"));
+  return parts.map((part, i) =>
+    part.toLowerCase() === term.toLowerCase()
+      ? <strong key={i} className="font-semibold">{part}</strong>
+      : part
+  );
 }
 
 export function PostCard({
@@ -22,6 +32,7 @@ export function PostCard({
   avatarSrc,
   timestamp,
   body,
+  highlight,
   imageSrc,
   imageAlt = "",
   likes,
@@ -36,7 +47,9 @@ export function PostCard({
         timestamp={timestamp}
       />
 
-      <p className="text-sm text-ink leading-relaxed whitespace-pre-wrap">{body}</p>
+      <p className="text-sm text-ink leading-relaxed whitespace-pre-wrap">
+        {highlight ? highlightText(body, highlight) : body}
+      </p>
 
       {imageSrc && (
         <div className="relative w-full aspect-video rounded overflow-hidden bg-surface">

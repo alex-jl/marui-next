@@ -1,8 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { UserButton, ClerkLoading, ClerkLoaded } from "@clerk/nextjs";
-import { Input } from "@/components/ui/Input";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { SearchForm } from "@/components/layout/SearchForm";
 
 interface NavBarProps {
   appName?: string;
@@ -16,9 +15,7 @@ export function NavBar({ appName = "marui" }: NavBarProps) {
           <Image src="/icon.svg" alt={appName} width={36} height={36} />
         </Link>
 
-        <div className="flex-1">
-          <Input aria-label="Search" placeholder="Search…" icon={<MagnifyingGlassIcon className="w-4 h-4" />} />
-        </div>
+        <SearchForm />
 
         <div className="shrink-0 w-8 h-8 flex items-center justify-center">
           <ClerkLoading>

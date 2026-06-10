@@ -144,6 +144,20 @@ export async function getSentRequests(userId: string): Promise<PendingRequestRow
   `;
 }
 
+export async function searchPosts(query: string, currentUserId: string): Promise<PostRow[]> {
+  return sql<PostRow[]>`
+    SELECT posts.id, posts.user_id, posts.content, posts.posted_at, users.name, users.avatar_url,
+      COUNT(likes.id)::int AS like_count,
+      COALESCE(BOOL_OR(likes.user_id = ${currentUserId}), false) AS liked
+    FROM posts
+    JOIN users ON posts.user_id = users.id
+    LEFT JOIN likes ON likes.post_id = posts.id
+    WHERE posts.content ILIKE ${'%' + query + '%'}
+    GROUP BY posts.id, posts.user_id, posts.content, posts.posted_at, users.name, users.avatar_url
+    ORDER BY posts.posted_at DESC
+  `;
+}
+
 export async function getUserPosts(userId: string, currentUserId: string): Promise<PostRow[]> {
   return sql<PostRow[]>`
     SELECT posts.id, posts.user_id, posts.content, posts.posted_at, users.name, users.avatar_url,
