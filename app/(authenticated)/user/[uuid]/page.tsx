@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import postgres from "postgres";
 import { Feed } from "@/components/layout/Feed";
@@ -10,6 +11,13 @@ const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
 
 interface UserPageProps {
   params: Promise<{ uuid: string }>;
+}
+
+export async function generateMetadata({ params }: UserPageProps): Promise<Metadata> {
+  const { uuid } = await params;
+  const [user] = await sql<{ name: string }[]>`SELECT name FROM users WHERE id = ${uuid} LIMIT 1`;
+  if (!user) return {};
+  return { title: user.name };
 }
 
 export default async function UserPage({ params }: UserPageProps) {
