@@ -41,10 +41,10 @@ export default async function CirclePage({ searchParams }: CirclePageProps) {
         <div className="bg-card border border-steel-light/50 rounded p-5 flex flex-col gap-4">
           <div className="flex items-baseline justify-between">
             <p className="text-sm font-semibold text-ink">{connections.length} / 100</p>
-            <p className="text-xs text-steel-dark">spots remaining: {100 - connections.length}</p>
+            <p className="text-xs text-steel-dark">Spots remaining: {100 - connections.length}</p>
           </div>
 
-          <div className="grid grid-cols-10 gap-2 justify-items-center">
+          <div className="grid grid-cols-5 sm:grid-cols-10 gap-2 justify-items-center">
             {connections.map((user) => (
               <Tooltip key={user.id} content={user.name}>
                 <Link href={`/user/${user.id}`} className="aspect-square">
@@ -52,7 +52,7 @@ export default async function CirclePage({ searchParams }: CirclePageProps) {
                     src={user.avatar_url ?? undefined}
                     alt={user.name}
                     initials={user.name.slice(0, 2)}
-                    size="sm"
+                    size="md"
                   />
                 </Link>
               </Tooltip>
@@ -60,7 +60,7 @@ export default async function CirclePage({ searchParams }: CirclePageProps) {
             {Array.from({ length: 100 - connections.length }).map((_, i) => (
               <div
                 key={i}
-                className="aspect-square w-8 h-8 rounded-full border border-dashed border-steel-light/70"
+                className="aspect-square w-10 h-10 rounded-full border border-dashed border-steel-light/70"
               />
             ))}
           </div>
