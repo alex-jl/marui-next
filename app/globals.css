@@ -18,8 +18,8 @@
   --color-card: #ffffff;
   --color-ink: #1c2c2c;
   --color-ink-muted: #586e6e;
-  --font-sans: var(--font-sawarabi);
-  --font-display: var(--font-sawarabi);
+  --font-sans: var(--font-zen-kaku-gothic-new);
+  --font-display: var(--font-zen-kaku-gothic-new);
 }
 
 /* Real CSS custom properties so raw var() refs resolve in CSS rules */

@@ -1,14 +1,14 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
-import { Sawarabi_Gothic } from "next/font/google";
+import { Zen_Kaku_Gothic_New } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import "./globals.css";
 
-const sawarabi = Sawarabi_Gothic({
-  variable: "--font-sawarabi",
+const zenKakuGothicNew = Zen_Kaku_Gothic_New({
+  variable: "--font-zen-kaku-gothic-new",
   subsets: ["latin"],
-  weight: "400",
+  weight: ["400", "500", "700"],
 });
 
 export const metadata: Metadata = {
@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${sawarabi.variable} h-full antialiased`}
+      className={`${zenKakuGothicNew.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
         <ClerkProvider
@@ -38,7 +38,7 @@ export default function RootLayout({
               colorInput: "#ffffff",
               colorInputForeground: "#1c2c2c",
               borderRadius: "0.25rem",
-              fontFamily: "var(--font-sawarabi), sans-serif",
+              fontFamily: "var(--font-zenKakuGothicNew), sans-serif",
             },
           }}
         >
