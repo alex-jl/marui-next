@@ -5,7 +5,8 @@ import { Feed } from "@/components/layout/Feed";
 import { Avatar } from "@/components/ui/Avatar";
 import { Timestamp } from "@/components/ui/Timestamp";
 import { PostCard } from "@/components/post/PostCard";
-import { getCurrentUser, getUserPosts } from "@/app/lib/queries";
+import { getCurrentUser, getUserPosts, getConnection } from "@/app/lib/queries";
+import { RemoveConnectionButton } from "@/components/ui/RemoveConnectionButton";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
 
@@ -32,11 +33,19 @@ export default async function UserPage({ params }: UserPageProps) {
 
   if (!currentUser || !user) notFound();
 
-  const posts = await getUserPosts(uuid, currentUser.id);
+  const [posts, connection] = await Promise.all([
+    getUserPosts(uuid, currentUser.id),
+    getConnection(currentUser.id, uuid),
+  ]);
 
   return (
     <Feed>
-      <div className="bg-card border border-steel-light/50 rounded p-5 flex items-center gap-4">
+      <div className="relative bg-card border border-steel-light/50 rounded p-5 flex items-center gap-4">
+        {connection && (
+          <div className="absolute top-3 right-3">
+            <RemoveConnectionButton connectionId={connection.id} />
+          </div>
+        )}
         <Avatar
           src={user.avatar_url ?? undefined}
           alt={user.name}

@@ -95,6 +95,19 @@ export type PendingRequestRow = {
   created_at: Date;
 };
 
+export async function getConnection(userId: string, otherUserId: string): Promise<{ id: string } | null> {
+  const [row] = await sql<{ id: string }[]>`
+    SELECT id FROM connections
+    WHERE accepted_at IS NOT NULL
+    AND (
+      (requester_id = ${userId} AND recipient_id = ${otherUserId}) OR
+      (requester_id = ${otherUserId} AND recipient_id = ${userId})
+    )
+    LIMIT 1
+  `;
+  return row ?? null;
+}
+
 export async function getConnections(userId: string): Promise<ConnectionRow[]> {
   return sql<ConnectionRow[]>`
     SELECT users.id, users.name, users.avatar_url

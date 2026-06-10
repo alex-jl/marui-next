@@ -30,3 +30,12 @@ export async function acceptConnection(connectionId: string) {
     WHERE id = ${connectionId} AND recipient_id = ${userId} AND accepted_at IS NULL
   `;
 }
+
+export async function removeConnection(connectionId: string) {
+  const userId = await getUserId();
+  await sql`
+    DELETE FROM connections
+    WHERE id = ${connectionId}
+    AND (requester_id = ${userId} OR recipient_id = ${userId})
+  `;
+}
