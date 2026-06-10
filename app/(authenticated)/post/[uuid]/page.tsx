@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import postgres from "postgres";
 import { Feed } from "@/components/layout/Feed";
 import { PostCard } from "@/components/post/PostCard";
+import { BackButton } from "@/components/ui/BackButton";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
 
@@ -40,12 +40,7 @@ export default async function PostPage({ params }: PostPageProps) {
         timestamp={Math.floor(new Date(post.posted_at).getTime() / 1000)}
         body={post.content}
       />
-      <Link
-        href="/feed"
-        className="self-center text-sm text-steel-dark hover:text-ink transition-colors"
-      >
-        ← Return to feed
-      </Link>
+      <BackButton />
     </Feed>
   );
 }

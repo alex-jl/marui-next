@@ -18,7 +18,7 @@ import {
 
 const tabs = [
   { href: "/feed",     label: "Feed",     icon: (a: boolean) => a ? <HomeIconSolid className="w-6 h-6" /> : <HomeIcon className="w-6 h-6" /> },
-  { href: "/circle",   label: "Circle",   icon: (a: boolean) => a ? <UserGroupIconSolid className="w-6 h-6" /> : <UserGroupIcon className="w-6 h-6" /> },
+  { href: "/circle",   label: "Circle",   icon: (a: boolean) => a ? <UserGroupIconSolid className="w-6 h-6" /> : <UserGroupIcon className="w-6 h-6" />, also: (p: string) => p.startsWith("/user/") },
   { href: "/profile",  label: "Profile",  icon: (a: boolean) => a ? <UserIconSolid className="w-6 h-6" /> : <UserIcon className="w-6 h-6" /> },
   { href: "/settings", label: "Settings", icon: (a: boolean) => a ? <Cog6ToothIconSolid className="w-6 h-6" /> : <Cog6ToothIcon className="w-6 h-6" /> },
 ];
@@ -27,7 +27,7 @@ export function BottomNav() {
   const pathname = usePathname();
 
   function navItem(tab: typeof tabs[number]) {
-    const isActive = pathname === tab.href;
+    const isActive = pathname === tab.href || tab.also?.(pathname) === true;
     return (
       <Link
         key={tab.href}
