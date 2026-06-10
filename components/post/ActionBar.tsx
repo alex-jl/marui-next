@@ -5,6 +5,7 @@ import Link from "next/link";
 import { IconButton } from "@/components/ui/IconButton";
 import { HeartIcon, ShareIcon, ChatBubbleLeftIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
+import { likePost, unlikePost } from "@/app/lib/actions";
 
 interface ActionBarProps {
   postId?: string;
@@ -30,8 +31,11 @@ export function ActionBar({
   }
 
   function handleLike() {
+    if (!postId) return;
     setLiked((v) => !v);
     setLikeCount((c) => (liked ? c - 1 : c + 1));
+    if (liked) unlikePost(postId);
+    else likePost(postId);
   }
 
   return (
