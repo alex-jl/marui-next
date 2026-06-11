@@ -59,3 +59,29 @@ export async function removeConnection(connectionId: string) {
     AND (requester_id = ${userId} OR recipient_id = ${userId})
   `;
 }
+
+export async function sendConnectionRequestByEmail(
+  _prev: { error?: string; success?: boolean },
+  formData: FormData,
+): Promise<{ error?: string; success?: boolean }> {
+  const email = (formData.get("email") as string | null)?.trim().toLowerCase();
+  if (!email) return { error: "Please enter an email address." };
+
+  const userId = await getUserId();
+
+  const [target] = await sql<{ id: string }[]>`
+    SELECT id FROM users WHERE LOWER(email) = ${email} LIMIT 1
+  `;
+  if (!target) return { error: "No user found with that email." };
+  if (target.id === userId) return { error: "You can't connect with yourself." };
+
+  const result = await sql`
+    INSERT INTO connections (requester_id, recipient_id)
+    VALUES (${userId}, ${target.id})
+    ON CONFLICT DO NOTHING
+  `;
+  if (result.count === 0) return { error: "A connection or request already exists with this user." };
+
+  revalidatePath("/circle");
+  return { success: true };
+}

@@ -8,6 +8,7 @@ import { Tooltip } from "@/components/ui/Tooltip";
 import { Timestamp } from "@/components/ui/Timestamp";
 import { getCurrentUser, getConnections, getPendingRequests, getSentRequests } from "@/app/lib/queries";
 import { acceptConnection, declineRequest, cancelRequest } from "@/app/lib/actions";
+import { AddConnectionButton } from "@/components/circle/AddConnectionButton";
 
 export const metadata: Metadata = { title: "Circle" };
 
@@ -67,10 +68,10 @@ export default async function CirclePage({ searchParams }: CirclePageProps) {
 
       {activeTab === "requests" && (
         <>
-          {pendingRequests.length > 0 && (
-            <p className="text-xs font-semibold text-steel-dark uppercase tracking-wider px-1">
-              Received
-            </p>
+          <AddConnectionButton />
+          <p className="text-xs font-semibold text-steel-dark uppercase tracking-wider px-1">Received</p>
+          {pendingRequests.length === 0 && (
+            <p className="text-sm text-steel-dark px-1">No received requests.</p>
           )}
           {pendingRequests.map((req) => (
             <div key={req.connection_id} className="bg-card border border-steel-light/50 rounded p-4 flex items-center gap-3">
@@ -99,37 +100,31 @@ export default async function CirclePage({ searchParams }: CirclePageProps) {
               </div>
             </div>
           ))}
-          {pendingRequests.length === 0 && sentRequests.length === 0 && (
-            <p className="text-center text-sm text-steel-dark py-8">No pending requests.</p>
-          )}
 
-          {sentRequests.length > 0 && (
-            <>
-              <p className="text-xs font-semibold text-steel-dark uppercase tracking-wider px-1 mt-2">
-                Sent
-              </p>
-              {sentRequests.map((req) => (
-                <div key={req.connection_id} className="bg-card border border-steel-light/50 rounded p-4 flex items-center gap-3">
-                  <Link href={`/user/${req.id}`} className="shrink-0">
-                    <Avatar src={req.avatar_url ?? undefined} alt={req.name} initials={req.name.slice(0, 2)} size="md" />
-                  </Link>
-                  <div className="flex-1 min-w-0">
-                    <Link href={`/user/${req.id}`} className="text-sm font-semibold text-ink hover:underline truncate block">
-                      {req.name}
-                    </Link>
-                    <p className="text-xs text-steel-dark">
-                      Sent <Timestamp unix={Math.floor(new Date(req.created_at).getTime() / 1000)} />
-                    </p>
-                  </div>
-                  <form action={cancelRequest.bind(null, req.connection_id)}>
-                    <button className="text-sm font-medium px-3 py-1.5 rounded text-steel-dark hover:bg-red-500/10 hover:text-red-500 transition-colors cursor-pointer">
-                      Cancel
-                    </button>
-                  </form>
-                </div>
-              ))}
-            </>
+          <p className="text-xs font-semibold text-steel-dark uppercase tracking-wider px-1 mt-2">Sent</p>
+          {sentRequests.length === 0 && (
+            <p className="text-sm text-steel-dark px-1">No sent requests.</p>
           )}
+          {sentRequests.map((req) => (
+            <div key={req.connection_id} className="bg-card border border-steel-light/50 rounded p-4 flex items-center gap-3">
+              <Link href={`/user/${req.id}`} className="shrink-0">
+                <Avatar src={req.avatar_url ?? undefined} alt={req.name} initials={req.name.slice(0, 2)} size="md" />
+              </Link>
+              <div className="flex-1 min-w-0">
+                <Link href={`/user/${req.id}`} className="text-sm font-semibold text-ink hover:underline truncate block">
+                  {req.name}
+                </Link>
+                <p className="text-xs text-steel-dark">
+                  Sent <Timestamp unix={Math.floor(new Date(req.created_at).getTime() / 1000)} />
+                </p>
+              </div>
+              <form action={cancelRequest.bind(null, req.connection_id)}>
+                <button className="text-sm font-medium px-3 py-1.5 rounded text-steel-dark hover:bg-red-500/10 hover:text-red-500 transition-colors cursor-pointer">
+                  Cancel
+                </button>
+              </form>
+            </div>
+          ))}
         </>
       )}
     </Feed>
