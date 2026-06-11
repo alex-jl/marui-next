@@ -6,6 +6,7 @@ import { Feed } from "@/components/layout/Feed";
 import { PostCard } from "@/components/post/PostCard";
 import { Pagination } from "@/components/ui/Pagination";
 import { getCurrentUser, getFeedPosts } from "@/app/lib/queries";
+import { PostComposer } from "@/components/post/PostComposer";
 
 interface HomeProps {
   searchParams: Promise<{ page?: string }>;
@@ -22,6 +23,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
   return (
     <Feed>
+      <PostComposer name={currentUser.name} avatarSrc={currentUser.avatar_url ?? undefined} />
       {posts.map((post) => (
         <PostCard
           key={post.id}

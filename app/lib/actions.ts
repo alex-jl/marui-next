@@ -14,6 +14,14 @@ async function getUserId() {
   return id;
 }
 
+export async function createPost(formData: FormData): Promise<void> {
+  const content = (formData.get("content") as string | null)?.trim();
+  if (!content) return;
+  const userId = await getUserId();
+  await sql`INSERT INTO posts (user_id, content) VALUES (${userId}, ${content})`;
+  revalidatePath("/feed");
+}
+
 export async function likePost(postId: string) {
   const userId = await getUserId();
   await sql`INSERT INTO likes (user_id, post_id) VALUES (${userId}, ${postId}) ON CONFLICT DO NOTHING`;
