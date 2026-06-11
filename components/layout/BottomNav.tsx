@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useComposer } from "@/components/post/ComposerProvider";
 import {
   HomeIcon,
   UserGroupIcon,
@@ -25,6 +26,7 @@ const tabs = [
 
 export function BottomNav() {
   const pathname = usePathname();
+  const { open } = useComposer();
 
   function navItem(tab: typeof tabs[number]) {
     const isActive = pathname === tab.href || tab.also?.(pathname) === true;
@@ -51,9 +53,10 @@ export function BottomNav() {
 
         <button
           aria-label="New Post"
-          className="flex-none w-12 h-12 mx-4 flex items-center justify-center bg-granite text-white rounded-full cursor-pointer hover:bg-granite-dark transition hover:scale-110 active:scale-95"
+          onClick={open}
+          className="flex-none w-16 h-16 mx-2 -translate-y-3 flex items-center justify-center bg-granite text-white rounded-full shadow-xl shadow-granite/40 cursor-pointer hover:scale-105 active:scale-95 transition-transform"
         >
-          <PlusIcon className="w-6 h-6" />
+          <PlusIcon className="w-7 h-7 stroke-2" />
         </button>
 
         {tabs.slice(2).map(navItem)}
