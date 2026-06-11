@@ -2,6 +2,7 @@
 
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
+import { put } from "@vercel/blob";
 import postgres from "postgres";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
@@ -18,7 +19,21 @@ export async function createPost(formData: FormData): Promise<void> {
   const content = (formData.get("content") as string | null)?.trim();
   if (!content) return;
   const userId = await getUserId();
-  await sql`INSERT INTO posts (user_id, content) VALUES (${userId}, ${content})`;
+
+  const [{ id: postId }] = await sql<{ id: string }[]>`
+    INSERT INTO posts (user_id, content) VALUES (${userId}, ${content}) RETURNING id
+  `;
+
+  const files = (formData.getAll("images") as File[]).filter((f) => f.size > 0);
+  if (files.length > 0) {
+    await Promise.all(
+      files.map(async (file, i) => {
+        const { url } = await put(`posts/${postId}/${i}-${file.name}`, file, { access: "private" });
+        await sql`INSERT INTO attachments (post_id, position, url) VALUES (${postId}, ${i}, ${url})`;
+      })
+    );
+  }
+
   revalidatePath("/feed");
 }
 
