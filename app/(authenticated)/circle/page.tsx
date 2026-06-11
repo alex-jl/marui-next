@@ -39,9 +39,10 @@ export default async function CirclePage({ searchParams }: CirclePageProps) {
 
       {activeTab === "connections" && (
         <div className="bg-card border border-steel-light/50 rounded p-5 flex flex-col gap-4">
-          <div className="flex items-baseline justify-between">
-            <p className="text-sm font-semibold text-ink">{connections.length} / 100</p>
-            <p className="text-xs text-steel-dark">Spots remaining: {100 - connections.length}</p>
+          <div className="flex items-baseline gap-1">
+            <span className="text-lg font-semibold text-ink leading-none">{connections.length}</span>
+            <span className="text-steel-light/70 leading-none">/</span>
+            <span className="text-sm font-medium text-steel-dark leading-none">100</span>
           </div>
 
           <div className="grid grid-cols-5 sm:grid-cols-10 gap-2 justify-items-center">
@@ -57,12 +58,9 @@ export default async function CirclePage({ searchParams }: CirclePageProps) {
                 </Link>
               </Tooltip>
             ))}
-            {Array.from({ length: 100 - connections.length }).map((_, i) => (
-              <div
-                key={i}
-                className="aspect-square w-10 h-10 rounded-full border border-dashed border-steel-light/70"
-              />
-            ))}
+            {connections.length < 100 && (
+              <div className="aspect-square w-10 h-10 rounded-full border border-dashed border-steel-light/70" />
+            )}
           </div>
         </div>
       )}
