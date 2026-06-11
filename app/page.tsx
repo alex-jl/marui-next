@@ -10,7 +10,7 @@ export default function Root() {
         <h1 className="text-4xl font-medium tracking-wide text-ink">marui</h1>
       </div>
       <Link
-        href="/sign-in"
+        href="/feed"
         className="mt-4 border border-granite px-6 py-2 text-sm text-granite transition-colors hover:bg-granite hover:text-white"
       >
         enter the circle
