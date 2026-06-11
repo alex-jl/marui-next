@@ -23,7 +23,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
   return (
     <Feed>
-      <PostComposer name={currentUser.name} avatarSrc={currentUser.avatar_url ?? undefined} />
+      <PostComposer />
       {posts.map((post) => (
         <PostCard
           key={post.id}
