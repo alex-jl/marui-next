@@ -8,7 +8,7 @@ import { Tooltip } from "@/components/ui/Tooltip";
 import { Timestamp } from "@/components/ui/Timestamp";
 import { getCurrentUser, getConnections, getPendingRequests, getSentRequests } from "@/app/lib/queries";
 import { acceptConnection, declineRequest, cancelRequest } from "@/app/lib/actions";
-import { AddConnectionButton } from "@/components/circle/AddConnectionButton";
+import { AddConnectionButton, EmptyConnectionSlot } from "@/components/circle/AddConnectionButton";
 
 export const metadata: Metadata = { title: "Circle" };
 
@@ -59,9 +59,7 @@ export default async function CirclePage({ searchParams }: CirclePageProps) {
                 </Link>
               </Tooltip>
             ))}
-            {connections.length < 100 && (
-              <div className="aspect-square w-10 h-10 rounded-full border border-dashed border-steel-light/70" />
-            )}
+            {connections.length < 100 && <EmptyConnectionSlot />}
           </div>
         </div>
       )}
