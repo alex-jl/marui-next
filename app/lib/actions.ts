@@ -1,18 +1,16 @@
 "use server";
 
-import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { put } from "@vercel/blob";
 import postgres from "postgres";
+import { getCurrentUser } from "@/app/lib/queries";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
 
 async function getUserId() {
-  const { userId: clerkId } = await auth();
-  const [{ id }] = await sql<{ id: string }[]>`
-    SELECT id FROM users WHERE clerk_id = ${clerkId} LIMIT 1
-  `;
-  return id;
+  const user = await getCurrentUser();
+  if (!user) throw new Error("Not authenticated");
+  return user.id;
 }
 
 export async function createPost(formData: FormData): Promise<void> {

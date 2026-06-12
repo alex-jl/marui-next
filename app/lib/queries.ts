@@ -1,4 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
+import { cache } from "react";
 import postgres from "postgres";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
@@ -14,7 +15,7 @@ export type PostRow = {
   liked: boolean;
 };
 
-export async function getCurrentUser() {
+export const getCurrentUser = cache(async function getCurrentUser() {
   const { userId: clerkId } = await auth();
   const [user] = await sql<{ id: string; name: string; avatar_url: string | null; joined_at: Date }[]>`
     SELECT id, name, avatar_url, joined_at
@@ -23,7 +24,7 @@ export async function getCurrentUser() {
     LIMIT 1
   `;
   return user ?? null;
-}
+});
 
 export async function getFeedPosts(currentUserId: string): Promise<PostRow[]> {
   return sql<PostRow[]>`
