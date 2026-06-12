@@ -1,8 +1,20 @@
 import { auth } from "@clerk/nextjs/server";
 import { cache } from "react";
+import type { TransactionSql } from "postgres";
 import postgres from "postgres";
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: "require" });
+const safeSql = postgres(process.env.POSTGRES_SAFE_URL!, { ssl: "require" });
+
+function authedQuery<T>(
+  currentUserId: string,
+  fn: (tx: TransactionSql) => Promise<T>
+): Promise<T> {
+  return safeSql.begin(async (tx) => {
+    await tx`SELECT set_config('app.current_user_id', ${currentUserId}, true)`;
+    return fn(tx);
+  }) as Promise<T>;
+}
 
 export type PostRow = {
   id: string;
@@ -26,8 +38,8 @@ export const getCurrentUser = cache(async function getCurrentUser() {
   return user ?? null;
 });
 
-export async function getFeedPosts(currentUserId: string): Promise<PostRow[]> {
-  return sql<PostRow[]>`
+export function getFeedPosts(currentUserId: string): Promise<PostRow[]> {
+  return authedQuery(currentUserId, (tx) => tx<PostRow[]>`
     SELECT posts.id, posts.user_id, posts.content, posts.posted_at, users.name, users.avatar_url,
       COUNT(likes.id)::int AS like_count,
       COALESCE(BOOL_OR(likes.user_id = ${currentUserId}), false) AS liked
@@ -36,28 +48,32 @@ export async function getFeedPosts(currentUserId: string): Promise<PostRow[]> {
     LEFT JOIN likes ON likes.post_id = posts.id
     GROUP BY posts.id, posts.user_id, posts.content, posts.posted_at, users.name, users.avatar_url
     ORDER BY posts.posted_at DESC
-  `;
+  `);
 }
 
-export async function getPost(postId: string, currentUserId: string): Promise<PostRow | null> {
-  const [post] = await sql<PostRow[]>`
-    SELECT posts.id, posts.user_id, posts.content, posts.posted_at, users.name, users.avatar_url,
-      COUNT(likes.id)::int AS like_count,
-      COALESCE(BOOL_OR(likes.user_id = ${currentUserId}), false) AS liked
-    FROM posts
-    JOIN users ON posts.user_id = users.id
-    LEFT JOIN likes ON likes.post_id = posts.id
-    WHERE posts.id = ${postId}
-    GROUP BY posts.id, posts.user_id, posts.content, posts.posted_at, users.name, users.avatar_url
-  `;
-  return post ?? null;
+export function getPost(postId: string, currentUserId: string): Promise<PostRow | null> {
+  return authedQuery(currentUserId, async (tx) => {
+    const [post] = await tx<PostRow[]>`
+      SELECT posts.id, posts.user_id, posts.content, posts.posted_at, users.name, users.avatar_url,
+        COUNT(likes.id)::int AS like_count,
+        COALESCE(BOOL_OR(likes.user_id = ${currentUserId}), false) AS liked
+      FROM posts
+      JOIN users ON posts.user_id = users.id
+      LEFT JOIN likes ON likes.post_id = posts.id
+      WHERE posts.id = ${postId}
+      GROUP BY posts.id, posts.user_id, posts.content, posts.posted_at, users.name, users.avatar_url
+    `;
+    return post ?? null;
+  });
 }
 
-export async function getUserPostCount(userId: string): Promise<number> {
-  const [{ count }] = await sql<{ count: number }[]>`
-    SELECT COUNT(id)::int AS count FROM posts WHERE user_id = ${userId}
-  `;
-  return count;
+export function getUserPostCount(currentUserId: string): Promise<number> {
+  return authedQuery(currentUserId, async (tx) => {
+    const [{ count }] = await tx<{ count: number }[]>`
+      SELECT COUNT(id)::int AS count FROM posts WHERE user_id = ${currentUserId}
+    `;
+    return count;
+  });
 }
 
 export async function getTotalLikesGiven(userId: string): Promise<number> {
@@ -67,8 +83,8 @@ export async function getTotalLikesGiven(userId: string): Promise<number> {
   return count;
 }
 
-export async function getLikedPosts(userId: string): Promise<PostRow[]> {
-  return sql<PostRow[]>`
+export function getLikedPosts(currentUserId: string): Promise<PostRow[]> {
+  return authedQuery(currentUserId, (tx) => tx<PostRow[]>`
     SELECT posts.id, posts.user_id, posts.content, posts.posted_at, users.name, users.avatar_url,
       COUNT(all_likes.id)::int AS like_count,
       true AS liked
@@ -76,10 +92,10 @@ export async function getLikedPosts(userId: string): Promise<PostRow[]> {
     JOIN posts ON posts.id = my_likes.post_id
     JOIN users ON posts.user_id = users.id
     LEFT JOIN likes all_likes ON all_likes.post_id = posts.id
-    WHERE my_likes.user_id = ${userId}
+    WHERE my_likes.user_id = ${currentUserId}
     GROUP BY posts.id, posts.user_id, posts.content, posts.posted_at, users.name, users.avatar_url, my_likes.created_at
     ORDER BY my_likes.created_at DESC
-  `;
+  `);
 }
 
 export type ConnectionRow = {
@@ -145,8 +161,8 @@ export async function getSentRequests(userId: string): Promise<PendingRequestRow
   `;
 }
 
-export async function searchPosts(query: string, currentUserId: string): Promise<PostRow[]> {
-  return sql<PostRow[]>`
+export function searchPosts(query: string, currentUserId: string): Promise<PostRow[]> {
+  return authedQuery(currentUserId, (tx) => tx<PostRow[]>`
     SELECT posts.id, posts.user_id, posts.content, posts.posted_at, users.name, users.avatar_url,
       COUNT(likes.id)::int AS like_count,
       COALESCE(BOOL_OR(likes.user_id = ${currentUserId}), false) AS liked
@@ -156,11 +172,11 @@ export async function searchPosts(query: string, currentUserId: string): Promise
     WHERE posts.content ILIKE ${'%' + query + '%'}
     GROUP BY posts.id, posts.user_id, posts.content, posts.posted_at, users.name, users.avatar_url
     ORDER BY posts.posted_at DESC
-  `;
+  `);
 }
 
-export async function getUserPosts(userId: string, currentUserId: string): Promise<PostRow[]> {
-  return sql<PostRow[]>`
+export function getUserPosts(userId: string, currentUserId: string): Promise<PostRow[]> {
+  return authedQuery(currentUserId, (tx) => tx<PostRow[]>`
     SELECT posts.id, posts.user_id, posts.content, posts.posted_at, users.name, users.avatar_url,
       COUNT(likes.id)::int AS like_count,
       COALESCE(BOOL_OR(likes.user_id = ${currentUserId}), false) AS liked
@@ -170,5 +186,5 @@ export async function getUserPosts(userId: string, currentUserId: string): Promi
     WHERE posts.user_id = ${userId}
     GROUP BY posts.id, posts.user_id, posts.content, posts.posted_at, users.name, users.avatar_url
     ORDER BY posts.posted_at DESC
-  `;
+  `);
 }
