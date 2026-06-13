@@ -25,6 +25,7 @@ export type PostRow = {
   avatar_url: string | null;
   like_count: number;
   liked: boolean;
+  attachment_urls: string[];
 };
 
 export const getCurrentUser = cache(async function getCurrentUser() {
@@ -42,10 +43,12 @@ export function getFeedPosts(currentUserId: string): Promise<PostRow[]> {
   return authedQuery(currentUserId, (tx) => tx<PostRow[]>`
     SELECT posts.id, posts.user_id, posts.content, posts.posted_at, users.name, users.avatar_url,
       COUNT(likes.id)::int AS like_count,
-      COALESCE(BOOL_OR(likes.user_id = ${currentUserId}), false) AS liked
+      COALESCE(BOOL_OR(likes.user_id = ${currentUserId}), false) AS liked,
+      COALESCE(ARRAY_AGG(attachments.url ORDER BY attachments.position) FILTER (WHERE attachments.url IS NOT NULL), '{}') AS attachment_urls
     FROM posts
     JOIN users ON posts.user_id = users.id
     LEFT JOIN likes ON likes.post_id = posts.id
+    LEFT JOIN attachments ON attachments.post_id = posts.id
     GROUP BY posts.id, posts.user_id, posts.content, posts.posted_at, users.name, users.avatar_url
     ORDER BY posts.posted_at DESC
   `);
@@ -56,10 +59,12 @@ export function getPost(postId: string, currentUserId: string): Promise<PostRow 
     const [post] = await tx<PostRow[]>`
       SELECT posts.id, posts.user_id, posts.content, posts.posted_at, users.name, users.avatar_url,
         COUNT(likes.id)::int AS like_count,
-        COALESCE(BOOL_OR(likes.user_id = ${currentUserId}), false) AS liked
+        COALESCE(BOOL_OR(likes.user_id = ${currentUserId}), false) AS liked,
+        COALESCE(ARRAY_AGG(attachments.url ORDER BY attachments.position) FILTER (WHERE attachments.url IS NOT NULL), '{}') AS attachment_urls
       FROM posts
       JOIN users ON posts.user_id = users.id
       LEFT JOIN likes ON likes.post_id = posts.id
+      LEFT JOIN attachments ON attachments.post_id = posts.id
       WHERE posts.id = ${postId}
       GROUP BY posts.id, posts.user_id, posts.content, posts.posted_at, users.name, users.avatar_url
     `;
@@ -87,11 +92,13 @@ export function getLikedPosts(currentUserId: string): Promise<PostRow[]> {
   return authedQuery(currentUserId, (tx) => tx<PostRow[]>`
     SELECT posts.id, posts.user_id, posts.content, posts.posted_at, users.name, users.avatar_url,
       COUNT(all_likes.id)::int AS like_count,
-      true AS liked
+      true AS liked,
+      COALESCE(ARRAY_AGG(attachments.url ORDER BY attachments.position) FILTER (WHERE attachments.url IS NOT NULL), '{}') AS attachment_urls
     FROM likes my_likes
     JOIN posts ON posts.id = my_likes.post_id
     JOIN users ON posts.user_id = users.id
     LEFT JOIN likes all_likes ON all_likes.post_id = posts.id
+    LEFT JOIN attachments ON attachments.post_id = posts.id
     WHERE my_likes.user_id = ${currentUserId}
     GROUP BY posts.id, posts.user_id, posts.content, posts.posted_at, users.name, users.avatar_url, my_likes.created_at
     ORDER BY my_likes.created_at DESC
@@ -165,10 +172,12 @@ export function searchPosts(query: string, currentUserId: string): Promise<PostR
   return authedQuery(currentUserId, (tx) => tx<PostRow[]>`
     SELECT posts.id, posts.user_id, posts.content, posts.posted_at, users.name, users.avatar_url,
       COUNT(likes.id)::int AS like_count,
-      COALESCE(BOOL_OR(likes.user_id = ${currentUserId}), false) AS liked
+      COALESCE(BOOL_OR(likes.user_id = ${currentUserId}), false) AS liked,
+      COALESCE(ARRAY_AGG(attachments.url ORDER BY attachments.position) FILTER (WHERE attachments.url IS NOT NULL), '{}') AS attachment_urls
     FROM posts
     JOIN users ON posts.user_id = users.id
     LEFT JOIN likes ON likes.post_id = posts.id
+    LEFT JOIN attachments ON attachments.post_id = posts.id
     WHERE posts.content ILIKE ${'%' + query + '%'}
     GROUP BY posts.id, posts.user_id, posts.content, posts.posted_at, users.name, users.avatar_url
     ORDER BY posts.posted_at DESC
@@ -179,10 +188,12 @@ export function getUserPosts(userId: string, currentUserId: string): Promise<Pos
   return authedQuery(currentUserId, (tx) => tx<PostRow[]>`
     SELECT posts.id, posts.user_id, posts.content, posts.posted_at, users.name, users.avatar_url,
       COUNT(likes.id)::int AS like_count,
-      COALESCE(BOOL_OR(likes.user_id = ${currentUserId}), false) AS liked
+      COALESCE(BOOL_OR(likes.user_id = ${currentUserId}), false) AS liked,
+      COALESCE(ARRAY_AGG(attachments.url ORDER BY attachments.position) FILTER (WHERE attachments.url IS NOT NULL), '{}') AS attachment_urls
     FROM posts
     JOIN users ON posts.user_id = users.id
     LEFT JOIN likes ON likes.post_id = posts.id
+    LEFT JOIN attachments ON attachments.post_id = posts.id
     WHERE posts.user_id = ${userId}
     GROUP BY posts.id, posts.user_id, posts.content, posts.posted_at, users.name, users.avatar_url
     ORDER BY posts.posted_at DESC

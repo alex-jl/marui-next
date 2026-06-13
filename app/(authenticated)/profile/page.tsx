@@ -64,6 +64,7 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
           avatarSrc={post.avatar_url ?? undefined}
           timestamp={Math.floor(new Date(post.posted_at).getTime() / 1000)}
           body={post.content}
+          attachments={post.attachment_urls}
           likes={post.like_count}
           liked={post.liked}
         />

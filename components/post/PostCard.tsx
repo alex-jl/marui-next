@@ -1,6 +1,5 @@
 import { UserHeader } from "./UserHeader";
 import { ActionBar } from "./ActionBar";
-import Image from "next/image";
 
 interface PostCardProps {
   id?: string;
@@ -10,8 +9,7 @@ interface PostCardProps {
   timestamp: number;
   body: string;
   highlight?: string;
-  imageSrc?: string;
-  imageAlt?: string;
+  attachments?: string[];
   likes?: number;
   liked?: boolean;
 }
@@ -33,11 +31,12 @@ export function PostCard({
   timestamp,
   body,
   highlight,
-  imageSrc,
-  imageAlt = "",
+  attachments,
   likes,
   liked,
 }: PostCardProps) {
+  const images = attachments ?? [];
+
   return (
     <article className="bg-card border border-steel-light/50 rounded flex flex-col gap-4 p-4">
       <UserHeader
@@ -51,14 +50,13 @@ export function PostCard({
         {highlight ? highlightText(body, highlight) : body}
       </p>
 
-      {imageSrc && (
-        <div className="relative w-full aspect-video rounded overflow-hidden bg-surface">
-          <Image
-            src={imageSrc}
-            alt={imageAlt}
-            fill
-            className="object-cover"
-            sizes="(max-width: 640px) 100vw, 600px"
+      {images.length > 0 && (
+        <div className="w-full aspect-video rounded overflow-hidden bg-surface">
+          <img
+            src={`/api/blob?url=${encodeURIComponent(images[0])}`}
+            alt=""
+            className="w-full h-full object-cover"
+            loading="lazy"
           />
         </div>
       )}

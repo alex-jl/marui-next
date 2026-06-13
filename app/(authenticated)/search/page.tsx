@@ -41,6 +41,7 @@ export default async function SearchPage({ searchParams }: SearchProps) {
             timestamp={Math.floor(new Date(post.posted_at).getTime() / 1000)}
             body={post.content}
             highlight={query}
+            attachments={post.attachment_urls}
             likes={post.like_count}
             liked={post.liked}
           />
